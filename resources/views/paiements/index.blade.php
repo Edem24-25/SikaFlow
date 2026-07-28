@@ -1,13 +1,16 @@
 @extends('layouts.app')
 @section('title','Historique des paiements — SikaFlow')
 @section('content')
-<section class="max-w-6xl mx-auto px-4 py-10">
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-3xl font-bold">Historique des paiements</h1>
-    <a href="{{ route('paiements.pdf') }}" class="px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-sm">📄 Relevé PDF</a>
+<section class="max-w-6xl mx-auto px-4 py-8 sm:py-10">
+  <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+    <h1 class="text-2xl sm:text-3xl font-bold">Historique des paiements</h1>
+    <a href="{{ route('paiements.pdf') }}" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-sm transition-colors">
+      <i class="fa-solid fa-file-pdf text-rose-500"></i> Relevé PDF
+    </a>
   </div>
   <div class="bg-white rounded-2xl border border-slate-100 shadow-soft overflow-hidden">
-    <table class="w-full text-sm">
+    <div class="table-responsive">
+    <table class="w-full text-sm min-w-[700px]">
       <thead class="bg-slate-50 text-slate-500 text-xs uppercase">
         <tr><th class="text-left px-4 py-3">Date</th><th class="text-left px-4 py-3">Référence</th><th class="text-left px-4 py-3">Objet</th><th class="text-left px-4 py-3">Passerelle</th><th class="text-left px-4 py-3">Mode</th><th class="text-left px-4 py-3">Montant</th><th class="text-left px-4 py-3">Statut</th></tr>
       </thead>
@@ -27,6 +30,7 @@
         @endforelse
       </tbody>
     </table>
+    </div>
   </div>
   <div class="mt-4">{{ $paiements->links() }}</div>
 </section>

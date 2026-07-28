@@ -11,13 +11,20 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    protected $fillable = ['nom', 'telephone', 'email', 'password', 'role', 'status'];
+    protected $fillable = [
+        'nom', 'telephone', 'email', 'password', 'role', 'status',
+        'otp_code', 'otp_expires_at', 'telephone_verified_at',
+    ];
 
     protected $hidden = ['password', 'remember_token'];
 
     protected function casts(): array
     {
-        return ['password' => 'hashed'];
+        return [
+            'password' => 'hashed',
+            'otp_expires_at' => 'datetime',
+            'telephone_verified_at' => 'datetime',
+        ];
     }
 
     public function isAdmin(): bool

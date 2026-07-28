@@ -19,4 +19,8 @@ return [
         'token' => env('PAYDUNYA_TOKEN'),
         'mode' => env('PAYDUNYA_MODE', 'test'),
     ],
+    'africastalking' => [
+        'username' => env('AFRICASTALKING_USERNAME', 'sandbox'),
+        'api_key' => env('AFRICASTALKING_API_KEY'),
+    ],
 ];

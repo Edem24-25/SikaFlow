@@ -30,7 +30,17 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/deconnexion', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
+use App\Http\Controllers\Auth\PhoneVerificationController;
+
+Route::get('/verification-telephone', [PhoneVerificationController::class, 'show'])->name('verification.notice');
+Route::post('/verification-telephone/verifier', [PhoneVerificationController::class, 'verify'])->name('verification.verify');
+Route::post('/verification-telephone/renvoyer', [PhoneVerificationController::class, 'resend'])->name('verification.resend');
+
 Route::middleware('auth')->group(function () {
+    // Other auth routes
+});
+
+Route::middleware(['auth', 'phone.verified'])->group(function () {
     Route::get('/tableau-de-bord', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('prets', PretController::class);

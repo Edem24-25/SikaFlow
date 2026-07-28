@@ -2,6 +2,8 @@
 REM Script de démarrage SikaFlow
 REM Installe les dépendances et démarre la plateforme
 
+REM Utiliser le PHP de WAMP pour éviter les erreurs de pilote manquant (pdo_mysql)
+set PATH=C:\wamp64\bin\php\php8.2.29;%PATH%
 cls
 echo.
 echo ================================================

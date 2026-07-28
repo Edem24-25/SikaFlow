@@ -9,7 +9,9 @@
       <p class="text-slate-500">{{ $pret->creancier->nom }} · {{ ucfirst($pret->creancier->type) }}</p>
     </div>
     <div class="flex gap-2">
-      <a href="{{ route('prets.pdf', $pret) }}" class="px-4 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 text-sm">📄 PDF</a>
+      <a href="{{ route('prets.pdf', $pret) }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 text-sm">
+        <i class="fa-solid fa-file-pdf text-rose-500"></i> PDF
+      </a>
       <a href="{{ route('prets.edit', $pret) }}" class="px-4 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 text-sm">Modifier</a>
       <form method="POST" action="{{ route('prets.destroy', $pret) }}" onsubmit="return confirm('Supprimer ce prêt ?')">
         @csrf @method('DELETE')

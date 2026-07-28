@@ -1,9 +1,9 @@
 @extends('layouts.app')
 @section('title','Admin — SikaFlow')
 @section('content')
-<section class="max-w-6xl mx-auto px-4 py-10">
-  <h1 class="text-3xl font-bold mb-6">Tableau de bord administrateur</h1>
-  <div class="grid md:grid-cols-4 gap-4 mb-8">
+<section class="max-w-6xl mx-auto px-4 py-8 sm:py-10">
+  <h1 class="text-2xl sm:text-3xl font-bold mb-6">Tableau de bord administrateur</h1>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-8">
     <div class="p-5 rounded-2xl bg-gradient-to-br from-night-800 to-night-900 text-white"><div class="text-xs uppercase text-slate-300">Utilisateurs actifs</div><div class="text-3xl font-bold mt-2">{{ $stats['users_actifs'] }}</div></div>
     <div class="p-5 rounded-2xl bg-white border border-slate-100"><div class="text-xs uppercase text-slate-400">Prêts enregistrés</div><div class="text-3xl font-bold mt-2">{{ $stats['prets'] }}</div></div>
     <div class="p-5 rounded-2xl bg-white border border-slate-100"><div class="text-xs uppercase text-slate-400">Volume payé</div><div class="text-3xl font-bold mt-2">{{ number_format($stats['volume_paiements'],0,',',' ') }}</div><div class="text-xs text-slate-400">FCFA</div></div>
@@ -17,7 +17,8 @@
   </div>
   <div class="bg-white rounded-2xl border border-slate-100 shadow-soft overflow-hidden">
     <div class="p-5 border-b border-slate-100"><h2 class="font-semibold">Paiements récents</h2></div>
-    <table class="w-full text-sm">
+    <div class="table-responsive">
+    <table class="w-full text-sm min-w-[600px]">
       <thead class="bg-slate-50 text-xs uppercase text-slate-500"><tr><th class="text-left px-4 py-3">Utilisateur</th><th class="text-left px-4 py-3">Passerelle</th><th class="text-left px-4 py-3">Montant</th><th class="text-left px-4 py-3">Statut</th><th class="text-left px-4 py-3">Date</th></tr></thead>
       <tbody class="divide-y divide-slate-100">
         @foreach($stats['paiements_recents'] as $p)
@@ -25,6 +26,7 @@
         @endforeach
       </tbody>
     </table>
+    </div>
   </div>
 </section>
 @endsection

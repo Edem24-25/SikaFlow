@@ -1,10 +1,11 @@
 @extends('layouts.app')
 @section('title','Utilisateurs — Admin SikaFlow')
 @section('content')
-<section class="max-w-6xl mx-auto px-4 py-10">
-  <h1 class="text-3xl font-bold mb-6">Utilisateurs</h1>
+<section class="max-w-6xl mx-auto px-4 py-8 sm:py-10">
+  <h1 class="text-2xl sm:text-3xl font-bold mb-6">Utilisateurs</h1>
   <div class="bg-white rounded-2xl border border-slate-100 shadow-soft overflow-hidden">
-    <table class="w-full text-sm">
+    <div class="table-responsive">
+    <table class="w-full text-sm min-w-[640px]">
       <thead class="bg-slate-50 text-xs uppercase text-slate-500"><tr><th class="text-left px-4 py-3">Nom</th><th class="text-left px-4 py-3">Téléphone</th><th class="text-left px-4 py-3">E-mail</th><th class="text-left px-4 py-3">Statut</th><th class="text-left px-4 py-3">Inscrit</th><th></th></tr></thead>
       <tbody class="divide-y divide-slate-100">
         @foreach($users as $u)
@@ -19,6 +20,7 @@
         @endforeach
       </tbody>
     </table>
+    </div>
   </div>
   <div class="mt-4">{{ $users->links() }}</div>
 </section>

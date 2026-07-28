@@ -15,28 +15,62 @@ Ce dépôt est le **squelette Laravel 11** conforme au cahier des charges (CDC) 
 - Commandes artisan `sikaflow:process-echeances` (prélèvement auto) et `sikaflow:send-reminders` (rappels)
 - Intégrations préparées : **Kkiapay**, **Flutterwave**, **PayDunya** (voir `.env.example`)
 
+
+
 ## Installation
 
 ```bash
 composer install
+npm install
 cp .env.example .env
 php artisan key:generate
 # Configurez DB dans .env puis :
 php artisan migrate --seed
 php artisan storage:link
-php artisan serve
 ```
 
 Comptes seed :
+
 - **Admin** : `+22990000001` / `password`
 - **Utilisateur** : `+22997000001` / `password`
+
+
+
+## Démarrage
+
+### Backend (Laravel)
+
+```bash
+php artisan serve
+```
+
+Le serveur démarre sur `http://localhost:8000`.
+
+### Frontend (Vite)
+
+```bash
+npm run dev
+```
+
+Le serveur Vite démarre sur `http://localhost:5173` avec hot-reload.
+
+### Compiler pour la production
+
+```bash
+npm run build
+```
+
+
 
 ## Planificateur
 
 Ajoutez dans le cron de votre serveur :
+
 ```
 * * * * * cd /path/to/sikaflow && php artisan schedule:run >> /dev/null 2>&1
 ```
+
+
 
 ## Stack
 
@@ -44,6 +78,8 @@ Ajoutez dans le cron de votre serveur :
 - MySQL / MariaDB
 - Blade + Tailwind CSS (CDN pour ce starter, à builder via Vite en prod)
 - barryvdh/laravel-dompdf pour les exports PDF
+
+
 
 ## Structure
 
