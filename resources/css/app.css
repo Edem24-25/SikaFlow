@@ -1,1 +1,325 @@
-/* Tailwind est chargé via CDN dans layouts/app.blade.php pour ce starter. Migrez vers un build Tailwind + Vite en production. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    font-family: 'Manrope', system-ui, sans-serif;
+    background-color: theme('colors.slate.50');
+    color: theme('colors.slate.800');
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Sora', system-ui, sans-serif;
+  }
+
+  ::selection {
+    background-color: theme('colors.sika.200');
+    color: theme('colors.sika.900');
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: theme('colors.slate.300');
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: theme('colors.sika.400');
+  }
+
+  input, select, textarea {
+    font-family: inherit;
+  }
+}
+
+@layer components {
+  /* ---------- Buttons ---------- */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-semibold text-sm transition-all duration-300 select-none whitespace-nowrap disabled:opacity-50 disabled:pointer-events-none;
+  }
+  .btn:active {
+    @apply scale-[0.97];
+  }
+  .btn-primary {
+    @apply btn bg-sika-600 text-white shadow-soft hover:bg-sika-500 hover:-translate-y-0.5 hover:shadow-glow;
+  }
+  .btn-dark {
+    @apply btn bg-night-900 text-white shadow-soft hover:bg-night-800 hover:-translate-y-0.5;
+  }
+  .btn-white {
+    @apply btn bg-white text-sika-700 shadow-soft hover:bg-sika-50 hover:-translate-y-0.5;
+  }
+  .btn-outline {
+    @apply btn border-2 border-slate-200 text-slate-700 bg-white hover:border-sika-400 hover:text-sika-700 hover:bg-sika-50;
+  }
+  .btn-ghost {
+    @apply btn bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900;
+  }
+  .btn-danger {
+    @apply btn bg-rose-50 text-rose-600 border border-rose-200 hover:bg-rose-100 hover:border-rose-300;
+  }
+  .btn-gold {
+    @apply btn bg-gold-400 text-night-900 shadow-soft hover:bg-gold-300 hover:-translate-y-0.5;
+  }
+
+  /* ---------- Cards ---------- */
+  .card {
+    @apply bg-white border border-slate-100 rounded-2xl shadow-card;
+  }
+  .card-hover {
+    @apply transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lift hover:border-sika-200;
+  }
+  .glass {
+    @apply bg-white/80 backdrop-blur-xl border border-white/60;
+  }
+  .glass-dark {
+    @apply bg-night-900/60 backdrop-blur-xl border border-white/10;
+  }
+
+  /* ---------- Eyebrow / pill labels ---------- */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-widest;
+  }
+  .eyebrow-sika {
+    @apply eyebrow bg-sika-50 text-sika-700 ring-1 ring-sika-200/70;
+  }
+  .eyebrow-gold {
+    @apply eyebrow bg-gold-400/10 text-gold-600 ring-1 ring-gold-400/40;
+  }
+  .eyebrow-dark {
+    @apply eyebrow bg-white/10 text-sika-300 ring-1 ring-white/15;
+  }
+
+  /* ---------- Section ---------- */
+  .section-pad {
+    @apply py-16 sm:py-24;
+  }
+  .section-head {
+    @apply max-w-2xl mx-auto text-center mb-12 sm:mb-16;
+  }
+
+  /* ---------- Form controls ---------- */
+  .field-label {
+    @apply block text-sm font-semibold text-slate-700 mb-1.5;
+  }
+  .input {
+    @apply w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 shadow-sm transition-all duration-200 placeholder:text-slate-400 hover:border-slate-300 focus:outline-none focus:border-sika-500 focus:ring-4 focus:ring-sika-500/15;
+  }
+  .input-icon-wrap {
+    @apply relative;
+  }
+  .input-icon {
+    @apply absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none;
+  }
+  .input-with-icon {
+    @apply input pl-11;
+  }
+  .input-error {
+    @apply border-rose-300 focus:border-rose-500 focus:ring-rose-500/15;
+  }
+  .select {
+    @apply input appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2024%2024%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22%3E%3Cpath%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20d%3D%22M19%209l-7%207-7-7%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.1rem] bg-[right_0.9rem_center] bg-no-repeat pr-10 cursor-pointer;
+  }
+
+  /* ---------- Badges ---------- */
+  .badge {
+    @apply inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold;
+  }
+  .badge-green {
+    @apply badge bg-sika-100 text-sika-700;
+  }
+  .badge-slate {
+    @apply badge bg-slate-100 text-slate-600;
+  }
+  .badge-red {
+    @apply badge bg-rose-100 text-rose-700;
+  }
+  .badge-amber {
+    @apply badge bg-amber-100 text-amber-700;
+  }
+  .badge-gold {
+    @apply badge bg-gold-400/20 text-gold-600;
+  }
+  .badge-night {
+    @apply badge bg-night-900 text-white;
+  }
+
+  /* ---------- Nav link ---------- */
+  .nav-link {
+    @apply relative px-3.5 py-2 rounded-lg text-sm font-medium text-slate-600 transition-colors duration-200 hover:text-sika-700 hover:bg-sika-50;
+  }
+  .nav-link-active {
+    @apply text-sika-700 bg-sika-50;
+  }
+
+  /* ---------- Table ---------- */
+  .table-wrap {
+    @apply overflow-x-auto;
+  }
+  .table-responsive {
+    @apply overflow-x-auto;
+  }
+  .table-base {
+    @apply w-full text-sm min-w-[640px];
+  }
+  .table-head {
+    @apply bg-slate-50/80 text-slate-500 text-[11px] uppercase tracking-wider;
+  }
+  .table-head th {
+    @apply text-left px-5 py-3.5 font-bold;
+  }
+  .table-base tbody tr {
+    @apply border-b border-slate-100 transition-colors duration-150 hover:bg-sika-50/40;
+  }
+  .table-base tbody tr:last-child {
+    @apply border-b-0;
+  }
+  .table-base td {
+    @apply px-5 py-4;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero-gradient {
+    background:
+      radial-gradient(60rem 30rem at 15% -10%, rgba(31, 161, 111, 0.28), transparent 60%),
+      radial-gradient(50rem 30rem at 110% 0%, rgba(245, 196, 96, 0.12), transparent 55%),
+      linear-gradient(135deg, #050913 0%, #0e1630 45%, #14203c 100%);
+  }
+  .hero-grid {
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, black 30%, transparent 75%);
+  }
+  .hero-glow {
+    @apply absolute rounded-full blur-[90px] pointer-events-none;
+  }
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(120deg, #47bd8b, #1fa16f 45%, #f5c460);
+  }
+  .animated-gradient {
+    background-size: 200% 200%;
+    animation: gradientShift 8s ease infinite;
+  }
+
+  /* ---------- Misc ---------- */
+  .link-arrow {
+    @apply inline-flex items-center gap-1.5 font-semibold text-sika-700 transition-all duration-200 hover:gap-2.5;
+  }
+  .divider-label {
+    @apply relative text-xs text-slate-400;
+  }
+  .divider-label::before,
+  .divider-label::after {
+    content: '';
+    @apply absolute top-1/2 w-16 sm:w-28 h-px bg-slate-200 -translate-y-1/2;
+  }
+  .divider-label::before { @apply right-full mr-4; }
+  .divider-label::after { @apply left-full ml-4; }
+
+  .shimmer-effect {
+    @apply relative overflow-hidden;
+  }
+  .shimmer-effect::after {
+    content: '';
+    @apply absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 animate-shimmer;
+  }
+
+  .tilt-card {
+    transform-style: preserve-3d;
+  }
+}
+
+/* ---------- Reveal on scroll ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-32px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal-right {
+  opacity: 0;
+  transform: translateX(32px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.94);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.visible,
+.reveal-left.visible,
+.reveal-right.visible,
+.reveal-scale.visible {
+  opacity: 1;
+  transform: none;
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-5 { transition-delay: 0.5s; }
+.reveal-delay-6 { transition-delay: 0.6s; }
+
+[x-cloak] {
+  display: none !important;
+}
+
+/* Counter helper: initial state */
+[data-counter] {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+[data-counter].counted {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal,
+  .reveal-left,
+  .reveal-right,
+  .reveal-scale {
+    opacity: 1;
+    transform: none;
+  }
+  [data-counter] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@layer utilities {
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+}

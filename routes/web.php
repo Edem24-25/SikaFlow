@@ -16,16 +16,19 @@ use App\Http\Controllers\Admin\UserAdminController;
 use App\Http\Controllers\Admin\PretAdminController;
 use App\Http\Controllers\Admin\PaiementAdminController;
 use App\Http\Controllers\Admin\NotificationAdminController;
+use App\Http\Controllers\KkiapayCallbackController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/a-propos', [HomeController::class, 'about'])->name('about');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
+Route::get('/confidentialite', [HomeController::class, 'privacy'])->name('privacy');
+Route::get('/merci', [HomeController::class, 'thankyou'])->name('thankyou');
 
 Route::middleware('guest')->group(function () {
     Route::get('/connexion', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/connexion', [AuthController::class, 'login']);
+    Route::post('/connexion', [AuthController::class, 'login'])->middleware('throttle:5,1');
     Route::get('/inscription', [AuthController::class, 'showRegister'])->name('register');
-    Route::post('/inscription', [AuthController::class, 'register']);
+    Route::post('/inscription', [AuthController::class, 'register'])->middleware('throttle:3,1');
 });
 
 Route::post('/deconnexion', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
@@ -33,12 +36,14 @@ Route::post('/deconnexion', [AuthController::class, 'logout'])->middleware('auth
 use App\Http\Controllers\Auth\PhoneVerificationController;
 
 Route::get('/verification-telephone', [PhoneVerificationController::class, 'show'])->name('verification.notice');
-Route::post('/verification-telephone/verifier', [PhoneVerificationController::class, 'verify'])->name('verification.verify');
-Route::post('/verification-telephone/renvoyer', [PhoneVerificationController::class, 'resend'])->name('verification.resend');
+Route::post('/verification-telephone/verifier', [PhoneVerificationController::class, 'verify'])->name('verification.verify')->middleware('throttle:10,1');
+Route::post('/verification-telephone/renvoyer', [PhoneVerificationController::class, 'resend'])->name('verification.resend')->middleware('throttle:3,1');
 
 Route::middleware('auth')->group(function () {
-    // Other auth routes
+    Route::get('/paiement/kkiapay/callback', [KkiapayCallbackController::class, 'handle'])->name('kkiapay.callback');
 });
+
+Route::post('/paiement/kkiapay/webhook', [KkiapayCallbackController::class, 'webhook'])->name('kkiapay.webhook');
 
 Route::middleware(['auth', 'phone.verified'])->group(function () {
     Route::get('/tableau-de-bord', [DashboardController::class, 'index'])->name('dashboard');
@@ -46,6 +51,7 @@ Route::middleware(['auth', 'phone.verified'])->group(function () {
     Route::resource('prets', PretController::class);
     Route::get('/prets/{pret}/pdf', [PretController::class, 'pdf'])->name('prets.pdf');
     Route::post('/echeances/{echeance}/payer', [EcheanceController::class, 'pay'])->name('echeances.pay');
+    Route::post('/echeances/{echeance}/initier', [EcheanceController::class, 'initier'])->name('echeances.initier');
 
     Route::resource('abonnements', AbonnementController::class)->except(['show']);
 

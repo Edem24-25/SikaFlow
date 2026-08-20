@@ -1,2 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /tableau-de-bord/
+
+Sitemap: https://sikaflow.com/sitemap.xml

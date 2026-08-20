@@ -18,4 +18,14 @@ class HomeController extends Controller
     {
         return view('pages.contact');
     }
+
+    public function privacy()
+    {
+        return view('pages.privacy');
+    }
+
+    public function thankyou()
+    {
+        return view('pages.thankyou');
+    }
 }

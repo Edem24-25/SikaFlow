@@ -1,18 +1,15 @@
 @extends('layouts.app')
 @section('title','Mon profil — SikaFlow')
 @section('content')
-
-<section class="max-w-4xl mx-auto px-4 py-10">
+<section class="max-w-4xl mx-auto px-4 py-8 sm:py-12">
 
   {{-- Header hero --}}
-  <div class="relative bg-gradient-to-br from-sika-600 via-sika-700 to-sika-900 rounded-3xl p-8 mb-8 overflow-hidden">
-    {{-- Background decorative circles --}}
+  <div class="relative hero-gradient rounded-3xl p-6 sm:p-8 mb-8 overflow-hidden reveal">
     <div class="absolute -top-10 -right-10 w-48 h-48 bg-white/5 rounded-full"></div>
     <div class="absolute -bottom-6 -left-6 w-32 h-32 bg-white/5 rounded-full"></div>
     <div class="absolute top-1/2 right-32 w-16 h-16 bg-white/5 rounded-full"></div>
 
     <div class="relative flex flex-col sm:flex-row items-center sm:items-end gap-6">
-      {{-- Avatar animé --}}
       <div class="relative group">
         <div class="w-24 h-24 rounded-2xl bg-white/20 backdrop-blur-sm border-2 border-white/30 flex items-center justify-center text-white text-4xl font-bold shadow-xl ring-4 ring-white/10 group-hover:ring-sika-300/50 transition-all duration-300">
           {{ strtoupper(substr($user->nom, 0, 1)) }}
@@ -22,33 +19,28 @@
         </div>
       </div>
 
-      {{-- Infos utilisateur --}}
       <div class="text-center sm:text-left">
         <h1 class="text-2xl sm:text-3xl font-bold text-white">{{ $user->nom }}</h1>
         <p class="text-sika-200 text-sm mt-1">{{ $user->email }}</p>
-        <div class="flex items-center justify-center sm:justify-start gap-3 mt-3">
+        <div class="flex items-center justify-center sm:justify-start gap-3 mt-3 flex-wrap">
           <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium
             {{ $user->isAdmin() ? 'bg-gold-400/20 text-yellow-300 border border-yellow-400/30' : 'bg-white/10 text-white border border-white/20' }}">
             @if($user->isAdmin())
-              <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-              Administrateur
+              <i class="fa-solid fa-crown text-[10px]"></i> Administrateur
             @else
-              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-              Utilisateur
+              <i class="fa-solid fa-user text-[10px]"></i> Utilisateur
             @endif
           </span>
           @if($user->telephone)
             <span class="inline-flex items-center gap-1.5 text-xs text-sika-200">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-              {{ $user->telephone }}
+              <i class="fa-solid fa-phone text-[10px]"></i> {{ $user->telephone }}
             </span>
           @endif
         </div>
       </div>
 
       @if(!$user->isAdmin())
-      {{-- Stats rapides --}}
-      <div class="sm:ml-auto flex gap-4 text-center">
+      <div class="sm:ml-auto flex gap-3 text-center">
         <div class="bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/20">
           <div class="text-2xl font-bold text-white">{{ $user->prets()->count() }}</div>
           <div class="text-xs text-sika-200 mt-0.5">Prêts</div>
@@ -66,29 +58,13 @@
     </div>
   </div>
 
-  {{-- Alerts --}}
-  @if(session('success'))
-    <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(()=>show=false, 4000)"
-      class="mb-6 flex items-center gap-3 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700">
-      <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-      <span class="text-sm font-medium">{{ session('success') }}</span>
-      <button @click="show=false" class="ml-auto text-emerald-400 hover:text-emerald-600"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
-    </div>
-  @endif
-  @if($errors->any())
-    <div class="mb-6 flex items-start gap-3 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-700">
-      <svg class="w-5 h-5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-      <ul class="text-sm space-y-0.5">@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul>
-    </div>
-  @endif
-
   <div class="grid md:grid-cols-2 gap-6">
 
     {{-- Informations personnelles --}}
-    <div class="bg-white rounded-2xl shadow-soft border border-slate-100 overflow-hidden">
+    <div class="card overflow-hidden reveal">
       <div class="flex items-center gap-3 px-6 py-4 border-b border-slate-100 bg-slate-50/50">
-        <div class="w-8 h-8 rounded-lg bg-sika-100 flex items-center justify-center">
-          <svg class="w-4 h-4 text-sika-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        <div class="w-9 h-9 rounded-xl bg-sika-100 flex items-center justify-center">
+          <i class="fa-solid fa-user text-sika-600"></i>
         </div>
         <div>
           <h2 class="font-semibold text-slate-800 text-sm">Informations personnelles</h2>
@@ -97,52 +73,39 @@
       </div>
       <form method="POST" action="{{ route('profile.update') }}" class="p-6 space-y-4">
         @csrf @method('PUT')
-        <div class="space-y-1">
-          <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Nom complet</label>
+        <div>
+          <label class="field-label">Nom complet</label>
           <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-            </div>
-            <input id="nom" name="nom" type="text" value="{{ old('nom', $user->nom) }}"
-              class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-sika-500 focus:border-transparent transition-all outline-none hover:border-sika-300"
-              placeholder="Votre nom complet">
+            <i class="fa-solid fa-user text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 text-sm pointer-events-none"></i>
+            <input id="nom" name="nom" type="text" value="{{ old('nom', $user->nom) }}" class="input !pl-10" placeholder="Votre nom complet">
           </div>
         </div>
-        <div class="space-y-1">
-          <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Téléphone</label>
+        <div>
+          <label class="field-label">Téléphone</label>
           <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-            </div>
-            <input id="telephone" name="telephone" type="tel" value="{{ old('telephone', $user->telephone) }}"
-              class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-sika-500 focus:border-transparent transition-all outline-none hover:border-sika-300"
-              placeholder="+229 xx xx xx xx">
+            <i class="fa-solid fa-phone text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 text-sm pointer-events-none"></i>
+            <input id="telephone" name="telephone" type="tel" value="{{ old('telephone', $user->telephone) }}" class="input !pl-10" placeholder="+229 xx xx xx xx">
           </div>
         </div>
-        <div class="space-y-1">
-          <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Adresse e-mail</label>
+        <div>
+          <label class="field-label">Adresse e-mail</label>
           <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-            </div>
-            <input id="email" name="email" type="email" value="{{ old('email', $user->email) }}"
-              class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-sika-500 focus:border-transparent transition-all outline-none hover:border-sika-300"
-              placeholder="vous@exemple.com">
+            <i class="fa-solid fa-envelope text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 text-sm pointer-events-none"></i>
+            <input id="email" name="email" type="email" value="{{ old('email', $user->email) }}" class="input !pl-10" placeholder="vous@exemple.com">
           </div>
         </div>
-        <button type="submit"
-          class="w-full py-2.5 rounded-xl bg-sika-600 text-white text-sm font-semibold hover:bg-sika-700 active:scale-95 transition-all duration-150 shadow-soft flex items-center justify-center gap-2">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-          Enregistrer les modifications
+        <button type="submit" class="btn-primary w-full !py-3 relative overflow-hidden">
+          <i class="fa-solid fa-check"></i> Enregistrer les modifications
+          <span class="absolute inset-y-0 -left-1/2 w-1/3 bg-white/25 blur-md -skew-x-12 animate-shimmer pointer-events-none"></span>
         </button>
       </form>
     </div>
 
     {{-- Mot de passe --}}
-    <div class="bg-white rounded-2xl shadow-soft border border-slate-100 overflow-hidden">
+    <div class="card overflow-hidden reveal reveal-delay-1">
       <div class="flex items-center gap-3 px-6 py-4 border-b border-slate-100 bg-slate-50/50">
-        <div class="w-8 h-8 rounded-lg bg-rose-100 flex items-center justify-center">
-          <svg class="w-4 h-4 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        <div class="w-9 h-9 rounded-xl bg-rose-100 flex items-center justify-center">
+          <i class="fa-solid fa-shield-halved text-rose-600"></i>
         </div>
         <div>
           <h2 class="font-semibold text-slate-800 text-sm">Sécurité du compte</h2>
@@ -152,37 +115,28 @@
       <form method="POST" action="{{ route('profile.password') }}" x-data="{ showCurrent: false, showNew: false, showConfirm: false, strength: 0 }" class="p-6 space-y-4">
         @csrf @method('PUT')
 
-        <div class="space-y-1">
-          <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Mot de passe actuel</label>
+        <div>
+          <label class="field-label">Mot de passe actuel</label>
           <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-            </div>
-            <input :type="showCurrent ? 'text' : 'password'" name="current_password"
-              class="w-full pl-10 pr-10 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-rose-400 focus:border-transparent transition-all outline-none hover:border-rose-300"
-              placeholder="••••••••">
-            <button type="button" @click="showCurrent=!showCurrent" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors">
-              <svg x-show="!showCurrent" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-              <svg x-show="showCurrent" x-cloak class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>
+            <i class="fa-solid fa-lock text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 text-sm pointer-events-none"></i>
+            <input :type="showCurrent ? 'text' : 'password'" name="current_password" class="input !pl-10 !pr-10" placeholder="••••••••">
+            <button type="button" @click="showCurrent=!showCurrent" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition-colors">
+              <i x-show="!showCurrent" class="fa-regular fa-eye"></i>
+              <i x-show="showCurrent" x-cloak class="fa-regular fa-eye-slash"></i>
             </button>
           </div>
         </div>
 
-        <div class="space-y-1">
-          <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Nouveau mot de passe</label>
+        <div>
+          <label class="field-label">Nouveau mot de passe</label>
           <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
-            </div>
-            <input :type="showNew ? 'text' : 'password'" name="password" @input="strength = $event.target.value.length > 12 ? 3 : $event.target.value.length > 8 ? 2 : $event.target.value.length > 4 ? 1 : 0"
-              class="w-full pl-10 pr-10 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-rose-400 focus:border-transparent transition-all outline-none hover:border-rose-300"
-              placeholder="••••••••">
-            <button type="button" @click="showNew=!showNew" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors">
-              <svg x-show="!showNew" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-              <svg x-show="showNew" x-cloak class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>
+            <i class="fa-solid fa-key text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 text-sm pointer-events-none"></i>
+            <input :type="showNew ? 'text' : 'password'" name="password" @input="strength = $event.target.value.length > 12 ? 3 : $event.target.value.length > 8 ? 2 : $event.target.value.length > 4 ? 1 : 0" class="input !pl-10 !pr-10" placeholder="••••••••">
+            <button type="button" @click="showNew=!showNew" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition-colors">
+              <i x-show="!showNew" class="fa-regular fa-eye"></i>
+              <i x-show="showNew" x-cloak class="fa-regular fa-eye-slash"></i>
             </button>
           </div>
-          {{-- Indicateur de force --}}
           <div class="flex gap-1 mt-2" x-show="strength > 0" x-transition>
             <div class="h-1.5 flex-1 rounded-full transition-all duration-300" :class="strength >= 1 ? 'bg-rose-400' : 'bg-slate-200'"></div>
             <div class="h-1.5 flex-1 rounded-full transition-all duration-300" :class="strength >= 2 ? 'bg-amber-400' : 'bg-slate-200'"></div>
@@ -195,26 +149,20 @@
           </div>
         </div>
 
-        <div class="space-y-1">
-          <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Confirmation</label>
+        <div>
+          <label class="field-label">Confirmation</label>
           <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-            </div>
-            <input :type="showConfirm ? 'text' : 'password'" name="password_confirmation"
-              class="w-full pl-10 pr-10 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-rose-400 focus:border-transparent transition-all outline-none hover:border-rose-300"
-              placeholder="••••••••">
-            <button type="button" @click="showConfirm=!showConfirm" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors">
-              <svg x-show="!showConfirm" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-              <svg x-show="showConfirm" x-cloak class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>
+            <i class="fa-solid fa-lock text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 text-sm pointer-events-none"></i>
+            <input :type="showConfirm ? 'text' : 'password'" name="password_confirmation" class="input !pl-10 !pr-10" placeholder="••••••••">
+            <button type="button" @click="showConfirm=!showConfirm" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition-colors">
+              <i x-show="!showConfirm" class="fa-regular fa-eye"></i>
+              <i x-show="showConfirm" x-cloak class="fa-regular fa-eye-slash"></i>
             </button>
           </div>
         </div>
 
-        <button type="submit"
-          class="w-full py-2.5 rounded-xl bg-rose-500 text-white text-sm font-semibold hover:bg-rose-600 active:scale-95 transition-all duration-150 shadow-soft flex items-center justify-center gap-2">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-          Changer le mot de passe
+        <button type="submit" class="w-full !py-3 inline-flex items-center justify-center gap-2 rounded-xl bg-rose-500 text-white text-sm font-semibold hover:bg-rose-600 active:scale-95 transition-all duration-150 shadow-soft">
+          <i class="fa-solid fa-shield-halved"></i> Changer le mot de passe
         </button>
       </form>
     </div>
@@ -223,10 +171,10 @@
 
   {{-- Activité récente --}}
   @if(!$user->isAdmin())
-  <div class="mt-6 bg-white rounded-2xl shadow-soft border border-slate-100 overflow-hidden">
+  <div class="mt-6 card overflow-hidden reveal">
     <div class="flex items-center gap-3 px-6 py-4 border-b border-slate-100 bg-slate-50/50">
-      <div class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center">
-        <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+      <div class="w-9 h-9 rounded-xl bg-indigo-100 flex items-center justify-center">
+        <i class="fa-solid fa-chart-pie text-indigo-600"></i>
       </div>
       <div>
         <h2 class="font-semibold text-slate-800 text-sm">Résumé du compte</h2>
@@ -236,28 +184,28 @@
     <div class="grid grid-cols-2 sm:grid-cols-4 divide-x divide-y sm:divide-y-0 divide-slate-100">
       <div class="p-5 text-center group hover:bg-sika-50/50 transition-colors">
         <div class="w-10 h-10 rounded-xl bg-sika-100 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-          <svg class="w-5 h-5 text-sika-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <i class="fa-solid fa-file-invoice-dollar text-sika-600"></i>
         </div>
         <div class="text-2xl font-bold text-slate-800">{{ $user->prets()->count() }}</div>
         <div class="text-xs text-slate-500 mt-0.5">Prêts actifs</div>
       </div>
       <div class="p-5 text-center group hover:bg-amber-50/50 transition-colors">
         <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-          <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          <i class="fa-solid fa-arrows-rotate text-amber-600"></i>
         </div>
         <div class="text-2xl font-bold text-slate-800">{{ $user->abonnements()->count() }}</div>
         <div class="text-xs text-slate-500 mt-0.5">Abonnements</div>
       </div>
       <div class="p-5 text-center group hover:bg-emerald-50/50 transition-colors">
         <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-          <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+          <i class="fa-solid fa-money-bill-wave text-emerald-600"></i>
         </div>
         <div class="text-2xl font-bold text-slate-800">{{ $user->paiements()->count() }}</div>
         <div class="text-xs text-slate-500 mt-0.5">Paiements</div>
       </div>
       <div class="p-5 text-center group hover:bg-rose-50/50 transition-colors">
         <div class="w-10 h-10 rounded-xl bg-rose-100 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-          <svg class="w-5 h-5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+          <i class="fa-solid fa-bell text-rose-600"></i>
         </div>
         <div class="text-2xl font-bold text-slate-800">{{ $user->notifications()->whereNull('lu_at')->count() }}</div>
         <div class="text-xs text-slate-500 mt-0.5">Non lues</div>

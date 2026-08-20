@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -12,9 +11,16 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        'nom', 'telephone', 'email', 'password', 'role', 'status',
-        'otp_code', 'otp_expires_at', 'telephone_verified_at',
+        'nom', 'telephone', 'email', 'password',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (User $user) {
+            $user->role ??= 'user';
+            $user->status ??= 'actif';
+        });
+    }
 
     protected $hidden = ['password', 'remember_token'];
 

@@ -29,6 +29,11 @@ class MoyenPaiementController extends Controller
             auth()->user()->moyensPaiement()->update(['is_default' => false]);
         }
         MoyenPaiement::create($data);
+
+        if ($request->expectsJson()) {
+            return response()->json(['success' => true, 'message' => 'Moyen de paiement ajouté.']);
+        }
+
         return redirect()->route('moyens.index')->with('success', 'Moyen de paiement ajouté.');
     }
 

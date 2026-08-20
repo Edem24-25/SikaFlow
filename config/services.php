@@ -23,4 +23,7 @@ return [
         'username' => env('AFRICASTALKING_USERNAME', 'sandbox'),
         'api_key' => env('AFRICASTALKING_API_KEY'),
     ],
+    'resend' => [
+        'api_key' => env('RESEND_API_KEY'),
+    ],
 ];

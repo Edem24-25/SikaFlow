@@ -19,11 +19,8 @@ class AfricaTalkingSms
         $username = config('services.africastalking.username', 'sandbox');
         $apiKey = config('services.africastalking.api_key');
 
-        // Always log OTP codes locally for developers/simplicity
-        Log::info("SMS LOG (SikaFlow OTP): To = {$to} | Message = '{$message}'");
-
         if (empty($apiKey)) {
-            Log::warning("Africa's Talking SMS API Key is missing. SMS logged but not sent.");
+            Log::warning("Africa's Talking SMS API Key is missing. SMS not sent.");
             return true;
         }
 
@@ -48,7 +45,7 @@ class AfricaTalkingSms
                 ]);
 
             if ($response->successful()) {
-                Log::info("SMS sent successfully to {$to} via Africa's Talking: " . $response->body());
+                Log::info("SMS sent successfully to {$to} via Africa's Talking.");
                 return true;
             }
 

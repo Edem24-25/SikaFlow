@@ -10,6 +10,21 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    private function normalizeTelephone(string $value): string
+    {
+        $digits = preg_replace('/\D/', '', $value);
+
+        if (preg_match('/^\+229\d{8}$/', $value)) {
+            return $value;
+        }
+
+        if (strlen($digits) === 8) {
+            return '+229' . $digits;
+        }
+
+        return $value;
+    }
+
     public function showLogin()
     {
         return view('auth.login');
@@ -17,9 +32,16 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        $request->merge([
+            'telephone' => $this->normalizeTelephone($request->input('telephone', '')),
+        ]);
+
         $data = $request->validate([
-            'telephone' => 'required|string',
+            'telephone' => ['required', 'string', 'regex:/^\+229\d{8}$/'],
             'password' => 'required|string',
+        ], [
+            'telephone.required' => 'Le numéro de téléphone est requis.',
+            'telephone.regex' => 'Le numéro doit être au format Bénin : 97 00 00 01 ou +22997000001.',
         ]);
 
         if (Auth::attempt($data, $request->boolean('remember'))) {
@@ -37,34 +59,44 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $data = $request->validate([
-            'nom' => 'required|string|max:120',
-            'telephone' => 'required|string|unique:users,telephone',
-            'email' => 'nullable|email|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
+        $request->merge([
+            'telephone' => $this->normalizeTelephone($request->input('telephone', '')),
         ]);
 
-        // Generate random 6-digit OTP code
-        $code = str_pad((string) random_int(100000, 999999), 6, '0', STR_PAD_LEFT);
+        $data = $request->validate([
+            'nom' => ['required', 'string', 'max:120', 'regex:/^[\pL\s\-]+$/u'],
+            'telephone' => ['required', 'string', 'unique:users,telephone', 'regex:/^\+229\d{8}$/'],
+            'email' => 'nullable|email|unique:users,email',
+            'password' => ['required', 'string', 'min:8', 'confirmed', 'regex:/[A-Z]/', 'regex:/[0-9]/'],
+        ], [
+            'nom.required' => 'Le nom complet est requis.',
+            'nom.regex' => 'Le nom ne peut contenir que des lettres, espaces et tirets.',
+            'telephone.required' => 'Le numéro de téléphone est requis.',
+            'telephone.regex' => 'Le numéro doit être au format Bénin : 97 00 00 01 ou +22997000001.',
+            'telephone.unique' => 'Ce numéro est déjà utilisé.',
+            'password.required' => 'Le mot de passe est requis.',
+            'password.min' => 'Le mot de passe doit faire au moins 8 caractères.',
+            'password.confirmed' => 'Les mots de passe ne correspondent pas.',
+            'password.regex' => 'Le mot de passe doit contenir au moins une majuscule et un chiffre.',
+        ]);
 
-        $user = User::create([
+        $otp = app(\App\Services\OtpService::class);
+        $code = $otp->generate();
+
+        $request->session()->put('pending_registration', [
             'nom' => $data['nom'],
             'telephone' => $data['telephone'],
             'email' => $data['email'] ?? null,
             'password' => Hash::make($data['password']),
-            'role' => 'user',
-            'status' => 'actif',
             'otp_code' => $code,
-            'otp_expires_at' => now()->addMinutes(10),
+            'otp_expires_at' => now()->addMinutes(10)->timestamp,
         ]);
 
-        Auth::login($user);
+        if ($data['email'] ?? null) {
+            $otp->sendToEmail($data['email'], $data['nom'], $code);
+        }
 
-        // Send SMS with OTP
-        $message = "SikaFlow : Votre code de verification est {$code}. Valable 10 minutes.";
-        \App\Services\AfricaTalkingSms::send($user->telephone, $message);
-
-        return redirect()->route('verification.notice')->with('success', 'Un code de vérification vous a été envoyé par SMS.');
+        return redirect()->route('verification.notice')->with('success', 'Un code de vérification vous a été envoyé par e-mail.');
     }
 
     public function logout(Request $request)

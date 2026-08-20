@@ -3,97 +3,114 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Services\AfricaTalkingSms;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class PhoneVerificationController extends Controller
 {
-    /**
-     * Show the phone verification notice/form.
-     */
     public function show(Request $request)
     {
-        $user = $request->user();
+        $pending = $request->session()->get('pending_registration');
 
-        // If already verified, go to dashboard
-        if ($user->telephone_verified_at) {
-            return redirect()->route('dashboard');
+        if (!$pending) {
+            return redirect()->route('register');
+        }
+
+        if (now()->timestamp > $pending['otp_expires_at']) {
+            $request->session()->forget('pending_registration');
+            return redirect()->route('register')->withErrors(['email' => 'Le code a expiré. Veuillez vous réinscrire.']);
         }
 
         return view('auth.verify-phone', [
-            'telephone' => $user->telephone
+            'telephone' => $pending['telephone'],
         ]);
     }
 
-    /**
-     * Verify the phone verification code.
-     */
     public function verify(Request $request)
     {
-        $data = $request->validate([
-            'code' => 'required|string|size:6',
-        ]);
+        $pending = $request->session()->get('pending_registration');
 
-        $user = $request->user();
-
-        if ($user->telephone_verified_at) {
-            return redirect()->route('dashboard');
+        if (!$pending) {
+            return redirect()->route('register');
         }
 
-        // Check if code matches and is not expired
-        if (
-            $user->otp_code === $data['code'] &&
-            $user->otp_expires_at &&
-            Carbon::parse($user->otp_expires_at)->isFuture()
-        ) {
-            $user->update([
+        $data = $request->validate([
+            'code' => 'required|numeric|digits:6',
+        ], [
+            'code.required' => 'Le code de vérification est requis.',
+            'code.numeric' => 'Le code doit être un nombre à 6 chiffres.',
+            'code.digits' => 'Le code doit contenir exactement 6 chiffres.',
+        ]);
+
+        $codeValid = $pending['otp_code'] === $data['code'];
+        $codeNotExpired = now()->timestamp <= $pending['otp_expires_at'];
+
+        if ($codeValid && $codeNotExpired) {
+            $user = User::create([
+                'nom' => $pending['nom'],
+                'telephone' => $pending['telephone'],
+                'email' => $pending['email'],
+                'password' => $pending['password'],
                 'telephone_verified_at' => now(),
-                'otp_code' => null,
-                'otp_expires_at' => null,
             ]);
 
-            return redirect()->route('dashboard')->with('success', 'Votre numéro de téléphone a été vérifié avec succès !');
+            $request->session()->forget('pending_registration');
+            $request->session()->forget('otp_attempts');
+
+            Auth::login($user);
+
+            return redirect()->route('dashboard')->with('success', 'Votre compte a été créé et vérifié avec succès !');
         }
 
-        return back()->withErrors(['code' => 'Le code saisi est incorrect ou a expiré.']);
+        if (!$codeNotExpired) {
+            $request->session()->forget('pending_registration');
+            return back()->withErrors(['code' => 'Le code a expiré. Veuillez vous réinscrire.']);
+        }
+
+        $attempts = (int) $request->session()->get('otp_attempts', 0) + 1;
+        $request->session()->put('otp_attempts', $attempts);
+
+        if ($attempts > 5) {
+            $request->session()->forget('pending_registration');
+            $request->session()->forget('otp_attempts');
+            return back()->withErrors(['code' => 'Trop de tentatives. Veuillez vous réinscrire.']);
+        }
+
+        return back()->withErrors(['code' => 'Le code saisi est incorrect.']);
     }
 
-    /**
-     * Resend the verification SMS.
-     */
     public function resend(Request $request)
     {
-        $user = $request->user();
+        $pending = $request->session()->get('pending_registration');
 
-        if ($user->telephone_verified_at) {
-            return redirect()->route('dashboard');
+        if (!$pending) {
+            return redirect()->route('register');
         }
 
-        // Throttle resending: check if a code was sent less than 1 minute ago
-        if (
-            $user->otp_expires_at &&
-            Carbon::parse($user->otp_expires_at)->subMinutes(9)->isFuture()
-        ) {
-            return back()->withErrors(['resend' => 'Veuillez attendre avant de demander un nouveau code.']);
+        if (now()->timestamp <= $pending['otp_expires_at'] - 540) {
+            return back()->withErrors(['resend' => 'Veuillez attendre 1 minute avant de demander un nouveau code.']);
         }
 
-        // Generate new code
-        $code = str_pad((string) random_int(100000, 999999), 6, '0', STR_PAD_LEFT);
-        $user->update([
+        $otp = app(\App\Services\OtpService::class);
+        $code = $otp->generate();
+
+        $request->session()->put('pending_registration', array_merge($pending, [
             'otp_code' => $code,
-            'otp_expires_at' => now()->addMinutes(10),
-        ]);
+            'otp_expires_at' => now()->addMinutes(10)->timestamp,
+        ]));
 
-        // Send SMS
-        $message = "SikaFlow : Votre code de verification est {$code}. Valable 10 minutes.";
-        $sent = AfricaTalkingSms::send($user->telephone, $message);
+        $sent = false;
+        if ($pending['email']) {
+            $sent = $otp->sendToEmail($pending['email'], $pending['nom'], $code);
+        }
 
         if ($sent) {
-            return back()->with('success', 'Un nouveau code de vérification vous a été envoyé par SMS.');
+            return back()->with('success', 'Un nouveau code de vérification vous a été envoyé par e-mail.');
         }
 
-        return back()->withErrors(['resend' => 'Impossible d\'envoyer le SMS. Veuillez réessayer plus tard.']);
+        return back()->withErrors(['resend' => 'Impossible d\'envoyer le code. Veuillez réessayer plus tard.']);
     }
 }
