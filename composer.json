@@ -1,20 +1,20 @@
 {
   "name": "hoddglobal/sikaflow",
   "type": "project",
-  "description": "SikaFlow \u2014 Plateforme automatis\u00e9e de gestion des remboursements de pr\u00eats et abonnements (HODD GLOBAL).",
+  "description": "SikaFlow — Plateforme automatisée de gestion des remboursements de prêts et abonnements (HODD GLOBAL).",
   "keywords": [
     "laravel",
     "sikaflow",
     "fintech",
     "mobile-money",
     "abonnements",
-    "pr\u00eats"
+    "prêts"
   ],
   "license": "proprietary",
-    "require": {
+  "require": {
     "php": "^8.2",
     "barryvdh/laravel-dompdf": "^3.0",
-    "kkiapay/kkiapay-php": "^1.0",
+    "kkiapay/kkiapay-php": "dev-master",
     "laravel/breeze": "^2.0",
     "laravel/framework": "^11.0",
     "laravel/tinker": "^2.9",
@@ -66,6 +66,7 @@
       }
     }
   },
-  "minimum-stability": "stable",
+  "minimum-stability": "dev",
   "prefer-stable": true
 }
+
