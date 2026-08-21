@@ -9,7 +9,7 @@ class PaiementAdminController extends Controller
 {
     public function index()
     {
-        $paiements = Paiement::with('user')->latest()->paginate(20);
+        $paiements = Paiement::with('user')->whereHas('user')->latest()->paginate(20);
         return view('admin.paiements.index', compact('paiements'));
     }
 }

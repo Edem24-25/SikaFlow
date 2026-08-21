@@ -9,7 +9,7 @@ class PretAdminController extends Controller
 {
     public function index()
     {
-        $prets = Pret::with('user', 'creancier')->latest()->paginate(20);
+        $prets = Pret::with('user', 'creancier')->whereHas('user')->whereHas('creancier')->latest()->paginate(20);
         return view('admin.prets.index', compact('prets'));
     }
 }

@@ -17,7 +17,7 @@ class AdminDashboardController extends Controller
             'prets' => Pret::count(),
             'volume_paiements' => Paiement::where('statut','reussi')->sum('montant'),
             'taux_retard' => $this->tauxRetard(),
-            'paiements_recents' => Paiement::with('user')->latest()->limit(10)->get(),
+            'paiements_recents' => Paiement::with('user')->whereHas('user')->latest()->limit(10)->get(),
         ];
         return view('admin.dashboard', compact('stats'));
     }
